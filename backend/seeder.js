@@ -36,8 +36,13 @@ const importDAta = async () => {
   }
 }
 
-
-
+const destroyDAta = async () => {
+  try {
+    
+  } catch (error) {
+    
+  }
+}
 
 
 if(process.argv[2] === '-d') {
