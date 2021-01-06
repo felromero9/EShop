@@ -8,7 +8,7 @@ import { addToCart } from '../actions/cartActions';
 const CartScreen = ( { match, location, history }) => {
   const productId = match.params.id
 
-  const quantity = location.search ? Number(location.search.split('=') [1]) : 1
+  const quantity = location.search ? Number(location.search.split('=')[1]) : 1
 
   const dispatch = useDispatch()
 
@@ -22,47 +22,47 @@ const CartScreen = ( { match, location, history }) => {
     }
   }, [dispatch, productId, quantity])
 
-
   const removeFromCartHandler = (id) =>{
     console.log('remove')
+  }
+
+  const checkoutHandler = () => {
+    history.push('/login?redirect=shipping')
   }
 
   return (
     <Row>
       <Col md={8}>
         <h1>Shopping Cart</h1>
-        { cartItems.length === 0 ? (
-          <Message> 
-            Your cart is empty <Link to='/'>Go Back</Link>
-          </Message>
-        ) : (
-          <ListGroup variant='flush'>
-            {cartItems.map( item => {
+        { cartItems.length === 0 ? 
+          (<Message> Your cart is empty <Link to='/'>Go Back</Link></Message>) : 
+          (<ListGroup variant='flush'>
+            {cartItems.map(item => (
               <ListGroup.Item key={item.product}>
                 <Row>
                   <Col md={2}>
-                    <Image src={item.image} alt={item.name}  fluid rounded />
+                    <Image src={item.image} alt={item.name} fluid rounded />
                   </Col>
                   <Col md={3}>
                     <Link to={`/product/${item.product}`}> { item.name }
                     </Link>
                   </Col>
                   <Col md={2}> ${item.price} </Col>
-                  <Col md={2}>
+                  <Col md={3}>
                   <Form.Control 
                     as='select' 
-                    value={quantity} 
+                    value={item.quantity} 
                     onChange={(e) => dispatch(addToCart(item.product, Number(e.target.value)))}>
                       {
-                      [...Array(item.countInStock).keys()].map(x => (
-                        <option key={ x+1 } value={ x+1 }>
-                          { x+1 }
-                        </option>
-                      ))
+                        [...Array(item.countInStock).keys()].map(x => (
+                          <option key={ x+1 } value={ x+1 }>
+                            { x+1 }
+                          </option>
+                       ))
                       }
                     </Form.Control>
                   </Col>
-                  <Col md={2}>
+                  <Col md={1}>
                     <Button 
                     type='button' 
                     variant='light' 
@@ -72,14 +72,32 @@ const CartScreen = ( { match, location, history }) => {
                   </Col>
                 </Row>
               </ListGroup.Item>
-            })}
-
+          ))}
+            </ListGroup>
+          )}
+      </Col>
+      <Col md={4}>
+        <Card>
+          <ListGroup variant='flush'>
+            <ListGroup.Item>
+              <h2>
+                Subtotal ({ cartItems.reduce((accumulator, item) => accumulator + item.quantity, 0)})
+                items
+              </h2>
+              $ {cartItems.reduce((accumulator, item) => accumulator + item.quantity * item.price, 0).toFixed(2)}
+            </ListGroup.Item>
+            <ListGroup>
+              <Button 
+                type='button' 
+                className='btn-block' 
+                disable={ cartItems.length === 0 } 
+                onClick={checkoutHandler}>
+                Procceed to Chechout
+              </Button>
+            </ListGroup>
           </ListGroup>
-        )}
-      </Col>
-      <Col md={2}>
-      </Col>
-      <Col md={2}>
+              
+        </Card>          
       </Col>
     </Row>
   )
