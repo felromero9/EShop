@@ -11,7 +11,7 @@ const ProductScreen =  ({ match, history }) => {
   //const product = products.find( p => p.id === match.params.id); //Match the id product with the id <Route path='/product/:id'/>
   //const [product, setProduct] = useState({});
 
-  const [quantity, setQuantity ] = useState(0)
+  const [quantity, setQuantity ] = useState(1)
 
   const dispatch = useDispatch()
 
